@@ -7,22 +7,22 @@ class Bill {
         this._newindex = newindex;
         this._customer = customer;
     }
-    get oldindex() {
+    getOldIndex() {
         return this._oldindex;
     }
-    set oldindex(value) {
+    setOldIndex(value) {
         this._oldindex = value;
     }
-    get newindex() {
+    getNewIndex() {
         return this._newindex;
     }
-    set newindex(value) {
+    setNewIndex(value) {
         this._newindex = value;
     }
-    get customer() {
+    getCustomer() {
         return this._customer;
     }
-    set customer(value) {
+    setCustomer(value) {
         this._customer = value;
     }
 }

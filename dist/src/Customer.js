@@ -7,22 +7,22 @@ class Customer {
         this._numberhome = numberhome;
         this._electricmeterID = electricmeterID;
     }
-    get name() {
+    getName() {
         return this._name;
     }
-    set name(value) {
+    setName(value) {
         this._name = value;
     }
-    get numberhome() {
+    getNumberHome() {
         return this._numberhome;
     }
-    set numberhome(value) {
+    setNumberHome(value) {
         this._numberhome = value;
     }
-    get electricmeterID() {
+    getElectricmeterID() {
         return this._electricmeterID;
     }
-    set electricmeterID(value) {
+    setElectricmeterID(value) {
         this._electricmeterID = value;
     }
 }

@@ -85,6 +85,22 @@ function updateNewElectricMeterID() {
     billsManager.getAllBills();
 }
 
+function updateOldIndex() {
+    console.log('---Cập nhật tên khách hàng trên hóa đơn---');
+    let electricmeterID = +rl.question('Nhập ID công tơ điện:');
+    let OldIndexNew = +rl.question('Nhập số nhà mới của khách hàng:');
+    billsManager.updateOldIndexInfo(electricmeterID,OldIndexNew);
+    billsManager.getAllBills();
+}
+function updateNewIndex() {
+    console.log('---Cập nhật tên khách hàng trên hóa đơn---');
+    let electricmeterID = +rl.question('Nhập ID công tơ điện:');
+    let NewIndex = +rl.question('Nhập số nhà mới của khách hàng:');
+    billsManager.updateNewIndexInfo(electricmeterID,NewIndex);
+    billsManager.getAllBills();
+}
+
+
 
 function deleteBill() {
     console.log('---Xóa thông tin hóa đơn---');
@@ -145,39 +161,6 @@ function Update() {
 }
 
 do {
-    Update();
-    choice = +rl.question('Nhập lựa chọn của bạn:');
-    switch (choice) {
-        case UpdateChoice.UPDATE_ALL_INFO_BILL:
-            updateBill();
-            break;
-
-        case UpdateChoice.UPDATE_NAME:
-            updateNewName();
-            break;
-
-        case UpdateChoice.UPDATE_HOMENUMBER:
-            updateNewHomeNumber();
-            break;
-
-        case UpdateChoice.UPDATE_ELECTRICMETERID:
-            updateNewElectricMeterID();
-            break;
-
-        case UpdateChoice.UPDATE_OLDINDEX:
-
-            break;
-
-        case BillChoice.SOFT_BILL:
-            softBills();
-            break;
-
-        default :
-            console.log('-----Nhập lại lựa chọn------')
-    }
-} while (choice != BillChoice.EXIT);
-
-do {
     menu();
     choice = +rl.question('Nhập lựa chọn của bạn:');
     switch (choice) {
@@ -190,7 +173,39 @@ do {
             break;
 
         case BillChoice.UPDATE_BILL:
-            updateBill();
+            let updatechoice = -1;
+            do {
+                Update();
+                updatechoice = +rl.question('Nhập lựa chọn của bạn:');
+                switch (updatechoice) {
+                    case UpdateChoice.UPDATE_ALL_INFO_BILL:
+                        updateBill();
+                        break;
+
+                    case UpdateChoice.UPDATE_NAME:
+                        updateNewName();
+                        break;
+
+                    case UpdateChoice.UPDATE_HOMENUMBER:
+                        updateNewHomeNumber();
+                        break;
+
+                    case UpdateChoice.UPDATE_ELECTRICMETERID:
+                        updateNewElectricMeterID();
+                        break;
+
+                    case UpdateChoice.UPDATE_OLDINDEX:
+                        updateOldIndex();
+                        break;
+
+                    case UpdateChoice.UPDATE_NEWINDEX:
+                        updateNewIndex();
+                        break;
+
+                    default :
+                        console.log('-----Nhập lại lựa chọn------')
+                }
+            } while (updatechoice != UpdateChoice.EXIT);
             break;
 
         case BillChoice.DELETE_BILL:

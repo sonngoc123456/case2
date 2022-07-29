@@ -15,6 +15,41 @@ class BillsManager {
         let value = this.findIndexBill(electricmeterID);
         this.bills[value] = bill;
     }
+    updateNameInfo(electricmeterID, newName) {
+        for (let i = 0; i < this.bills.length; i++) {
+            if (this.bills[i].getCustomer().getElectricmeterID() === electricmeterID) {
+                this.bills[i].getCustomer().setName(newName);
+            }
+        }
+    }
+    updateNumberHomeInfo(electricmeterID, newNumberHome) {
+        for (let i = 0; i < this.bills.length; i++) {
+            if (this.bills[i].getCustomer().getElectricmeterID() === electricmeterID) {
+                this.bills[i].getCustomer().setNumberHome(newNumberHome);
+            }
+        }
+    }
+    updateElectricMeterIDInfo(electricmeterID, newElectricMeterID) {
+        for (let i = 0; i < this.bills.length; i++) {
+            if (this.bills[i].getCustomer().getElectricmeterID() === electricmeterID) {
+                this.bills[i].getCustomer().setElectricmeterID(newElectricMeterID);
+            }
+        }
+    }
+    updateOldIndexInfo(electricmeterID, newOldIndex) {
+        for (let i = 0; i < this.bills.length; i++) {
+            if (this.bills[i].getCustomer().getElectricmeterID() === electricmeterID) {
+                this.bills[i].setOldIndex(newOldIndex);
+            }
+        }
+    }
+    updateNewIndexInfo(electricmeterID, newNewIndex) {
+        for (let i = 0; i < this.bills.length; i++) {
+            if (this.bills[i].getCustomer().getElectricmeterID() === electricmeterID) {
+                this.bills[i].setNewIndex(newNewIndex);
+            }
+        }
+    }
     deleteBill(electricmeterID) {
         let value = this.findIndexBill(electricmeterID);
         this.bills.splice(value, 1);
@@ -22,7 +57,7 @@ class BillsManager {
     findIndexBill(electricmeterID) {
         let value = -1;
         for (let i = 0; i < this.bills.length; i++) {
-            if (this.bills[i].customer.electricmeterID == electricmeterID) {
+            if (this.bills[i].getCustomer().getElectricmeterID() == electricmeterID) {
                 value = i;
                 break;
             }
@@ -42,7 +77,7 @@ class BillsManager {
     softElectricMeterID() {
         for (let i = 0; i < this.bills.length; i++) {
             for (let j = 0; j < this.bills.length - i - 1; j++) {
-                if (this.bills[j].customer.electricmeterID > this.bills[j + 1].customer.electricmeterID) {
+                if (this.bills[j].getCustomer().getElectricmeterID() > this.bills[j + 1].getCustomer().getNumberHome()) {
                     this.swap(j);
                 }
             }
@@ -61,7 +96,7 @@ class BillsManager {
         else {
             let moneys = 1;
             console.log(value);
-            moneys = ((this.bills[value].newindex) - (this.bills[value].oldindex)) * 750;
+            moneys = ((this.bills[value].getNewIndex()) - (this.bills[value].getOldIndex())) * 750;
             return moneys;
         }
     }

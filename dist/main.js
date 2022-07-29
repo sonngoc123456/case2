@@ -38,6 +38,16 @@ var BillChoice;
     BillChoice[BillChoice["SOFT_BILL"] = 6] = "SOFT_BILL";
     BillChoice[BillChoice["EXIT"] = 0] = "EXIT";
 })(BillChoice || (BillChoice = {}));
+var UpdateChoice;
+(function (UpdateChoice) {
+    UpdateChoice[UpdateChoice["UPDATE_ALL_INFO_BILL"] = 1] = "UPDATE_ALL_INFO_BILL";
+    UpdateChoice[UpdateChoice["UPDATE_NAME"] = 2] = "UPDATE_NAME";
+    UpdateChoice[UpdateChoice["UPDATE_HOMENUMBER"] = 3] = "UPDATE_HOMENUMBER";
+    UpdateChoice[UpdateChoice["UPDATE_ELECTRICMETERID"] = 4] = "UPDATE_ELECTRICMETERID";
+    UpdateChoice[UpdateChoice["UPDATE_OLDINDEX"] = 5] = "UPDATE_OLDINDEX";
+    UpdateChoice[UpdateChoice["UPDATE_NEWINDEX"] = 6] = "UPDATE_NEWINDEX";
+    UpdateChoice[UpdateChoice["EXIT"] = 0] = "EXIT";
+})(UpdateChoice || (UpdateChoice = {}));
 let billsManager = new BillsManager_1.BillsManager();
 function inputCustomer() {
     let name = rl.question('Nhập tên khách hàng:');
@@ -54,19 +64,7 @@ function inputBill() {
 function showListBill() {
     console.log('-----Danh sách hóa đơn-------');
     let bills = billsManager.getAllBills();
-    let container = [];
-    let data;
-    for (let i = 0; i < bills.length; i++) {
-        data = {
-            CustomerName: bills[i].customer.name,
-            HomeNumber: bills[i].customer.numberhome,
-            ElectricMeterID: bills[i].customer.electricmeterID,
-            OldIndex: bills[i].oldindex,
-            NewIndex: bills[i].newindex,
-        };
-        container.push(data);
-    }
-    console.table(container);
+    displayList(bills);
 }
 function creatNewBill() {
     console.log('-----Thêm hóa đơn mới-----');
@@ -79,6 +77,41 @@ function updateBill() {
     let bill = inputBill();
     billsManager.updateBill(electricmeterID, bill);
 }
+function updateNewName() {
+    console.log('---Cập nhật tên khách hàng trên hóa đơn---');
+    let electricmeterID = +rl.question('Nhập ID công tơ điện:');
+    let newNameCustomer = rl.question('Nhập tên mới của khách hàng:');
+    billsManager.updateNameInfo(electricmeterID, newNameCustomer);
+    billsManager.getAllBills();
+}
+function updateNewHomeNumber() {
+    console.log('---Cập nhật tên khách hàng trên hóa đơn---');
+    let electricmeterID = +rl.question('Nhập ID công tơ điện:');
+    let newHomeNumberCustomer = +rl.question('Nhập số nhà mới của khách hàng:');
+    billsManager.updateNumberHomeInfo(electricmeterID, newHomeNumberCustomer);
+    billsManager.getAllBills();
+}
+function updateNewElectricMeterID() {
+    console.log('---Cập nhật tên khách hàng trên hóa đơn---');
+    let electricmeterID = +rl.question('Nhập ID công tơ điện:');
+    let newNewElectricMeterIDCustomer = +rl.question('Nhập số nhà mới của khách hàng:');
+    billsManager.updateElectricMeterIDInfo(electricmeterID, newNewElectricMeterIDCustomer);
+    billsManager.getAllBills();
+}
+function updateOldIndex() {
+    console.log('---Cập nhật tên khách hàng trên hóa đơn---');
+    let electricmeterID = +rl.question('Nhập ID công tơ điện:');
+    let OldIndexNew = +rl.question('Nhập số nhà mới của khách hàng:');
+    billsManager.updateOldIndexInfo(electricmeterID, OldIndexNew);
+    billsManager.getAllBills();
+}
+function updateNewIndex() {
+    console.log('---Cập nhật tên khách hàng trên hóa đơn---');
+    let electricmeterID = +rl.question('Nhập ID công tơ điện:');
+    let NewIndex = +rl.question('Nhập số nhà mới của khách hàng:');
+    billsManager.updateNewIndexInfo(electricmeterID, NewIndex);
+    billsManager.getAllBills();
+}
 function deleteBill() {
     console.log('---Xóa thông tin hóa đơn---');
     let electricmeterID = +rl.question('Nhập ID công tơ điện :');
@@ -88,15 +121,18 @@ function showBillFind() {
     console.log('---Tìm kiếm hóa đơn---');
     let electricmeterID = +rl.question('Nhập ID công tơ điện :');
     let bills = billsManager.showBillFind(electricmeterID);
+    displayList(bills);
+}
+function displayList(bills) {
     let container = [];
     let data;
     for (let i = 0; i < bills.length; i++) {
         data = {
-            CustomerName: bills[i].customer.name,
-            HomeNumber: bills[i].customer.numberhome,
-            ElectricMeterID: bills[i].customer.electricmeterID,
-            OldIndex: bills[i].oldindex,
-            NewIndex: bills[i].newindex,
+            CustomerName: bills[i].getCustomer().getName(),
+            HomeNumber: bills[i].getCustomer().getNumberHome(),
+            ElectricMeterID: bills[i].getCustomer().getElectricmeterID(),
+            OldIndex: bills[i].getOldIndex(),
+            NewIndex: bills[i].getNewIndex(),
         };
         container.push(data);
     }
@@ -105,19 +141,7 @@ function showBillFind() {
 function softBills() {
     console.log('-----Sắp xếp hóa đơn-----');
     let bills = billsManager.softElectricMeterID();
-    let container = [];
-    let data;
-    for (let i = 0; i < bills.length; i++) {
-        data = {
-            CustomerName: bills[i].customer.name,
-            HomeNumber: bills[i].customer.numberhome,
-            ElectricMeterID: bills[i].customer.electricmeterID,
-            OldIndex: bills[i].oldindex,
-            NewIndex: bills[i].newindex,
-        };
-        container.push(data);
-    }
-    console.table(container);
+    displayList(bills);
 }
 function menu() {
     console.log('---Quản lý hóa đơn tiền điện---');
@@ -127,6 +151,16 @@ function menu() {
     console.log('4. Xóa hóa đơn');
     console.log('5. Tìm kiếm hóa đơn');
     console.log('6. Sắp xếp hóa đơn');
+    console.log('0. Thoát chương trình');
+}
+function Update() {
+    console.log('---Chỉnh sửa thông tin trên hóa đơn---');
+    console.log('1. Chỉnh sửa toàn bộ thông tin');
+    console.log('2. Chỉnh sửa tên khách hàng');
+    console.log('3. Chỉnh sửa số nhà khách hàng');
+    console.log('4. Chỉnh sửa ID công tơ điện');
+    console.log('5. Chỉnh sửa chỉ số điện cũ');
+    console.log('6. Chỉnh sửa chỉ số điện mới');
     console.log('0. Thoát chương trình');
 }
 do {
@@ -140,7 +174,33 @@ do {
             showListBill();
             break;
         case BillChoice.UPDATE_BILL:
-            updateBill();
+            let updatechoice = -1;
+            do {
+                Update();
+                updatechoice = +rl.question('Nhập lựa chọn của bạn:');
+                switch (updatechoice) {
+                    case UpdateChoice.UPDATE_ALL_INFO_BILL:
+                        updateBill();
+                        break;
+                    case UpdateChoice.UPDATE_NAME:
+                        updateNewName();
+                        break;
+                    case UpdateChoice.UPDATE_HOMENUMBER:
+                        updateNewHomeNumber();
+                        break;
+                    case UpdateChoice.UPDATE_ELECTRICMETERID:
+                        updateNewElectricMeterID();
+                        break;
+                    case UpdateChoice.UPDATE_OLDINDEX:
+                        updateOldIndex();
+                        break;
+                    case UpdateChoice.UPDATE_NEWINDEX:
+                        updateNewIndex();
+                        break;
+                    default:
+                        console.log('-----Nhập lại lựa chọn------');
+                }
+            } while (updatechoice != UpdateChoice.EXIT);
             break;
         case BillChoice.DELETE_BILL:
             deleteBill();
