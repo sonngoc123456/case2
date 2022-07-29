@@ -34,13 +34,15 @@ var BillChoice;
     BillChoice[BillChoice["SHOW_LIST_BILL"] = 2] = "SHOW_LIST_BILL";
     BillChoice[BillChoice["UPDATE_BILL"] = 3] = "UPDATE_BILL";
     BillChoice[BillChoice["DELETE_BILL"] = 4] = "DELETE_BILL";
+    BillChoice[BillChoice["FIND_BILL"] = 5] = "FIND_BILL";
+    BillChoice[BillChoice["SOFT_BILL"] = 6] = "SOFT_BILL";
     BillChoice[BillChoice["EXIT"] = 0] = "EXIT";
 })(BillChoice || (BillChoice = {}));
 let billsManager = new BillsManager_1.BillsManager();
 function inputCustomer() {
     let name = rl.question('Nhập tên khách hàng:');
     let homenumber = +rl.question('Nhập số nhà :');
-    let electricmeterID = +rl.question('Nhập công tơ điện :');
+    let electricmeterID = +rl.question('Nhập ID công tơ điện :');
     return new Customer_1.Customer(name, homenumber, electricmeterID);
 }
 function inputBill() {
@@ -73,19 +75,49 @@ function creatNewBill() {
 }
 function updateBill() {
     console.log('---Cập nhật thông tin hóa đơn---');
-    let electricmeterID = +rl.question('Nhập vị công tơ mét:');
+    let electricmeterID = +rl.question('Nhập ID công tơ điện:');
     let bill = inputBill();
     billsManager.updateBill(electricmeterID, bill);
 }
 function deleteBill() {
-    console.log('---Xóa thông tin khách trọ---');
-    let electricmeterID = +rl.question('Nhập công tơ mét :');
+    console.log('---Xóa thông tin hóa đơn---');
+    let electricmeterID = +rl.question('Nhập ID công tơ điện :');
     billsManager.deleteBill(electricmeterID);
 }
-function login(name, pass) {
-    if (name == 'admin' && pass == 123) {
-        menu();
+function showBillFind() {
+    console.log('---Tìm kiếm hóa đơn---');
+    let electricmeterID = +rl.question('Nhập ID công tơ điện :');
+    let bills = billsManager.showBillFind(electricmeterID);
+    let container = [];
+    let data;
+    for (let i = 0; i < bills.length; i++) {
+        data = {
+            CustomerName: bills[i].customer.name,
+            HomeNumber: bills[i].customer.numberhome,
+            ElectricMeterID: bills[i].customer.electricmeterID,
+            OldIndex: bills[i].oldindex,
+            NewIndex: bills[i].newindex,
+        };
+        container.push(data);
     }
+    console.table(container);
+}
+function softBills() {
+    console.log('-----Sắp xếp hóa đơn-----');
+    let bills = billsManager.softElectricMeterID();
+    let container = [];
+    let data;
+    for (let i = 0; i < bills.length; i++) {
+        data = {
+            CustomerName: bills[i].customer.name,
+            HomeNumber: bills[i].customer.numberhome,
+            ElectricMeterID: bills[i].customer.electricmeterID,
+            OldIndex: bills[i].oldindex,
+            NewIndex: bills[i].newindex,
+        };
+        container.push(data);
+    }
+    console.table(container);
 }
 function menu() {
     console.log('---Quản lý hóa đơn tiền điện---');
@@ -101,22 +133,24 @@ do {
     menu();
     choice = +rl.question('Nhập lựa chọn của bạn:');
     switch (choice) {
-        case BillChoice.CREATE_BILL: {
+        case BillChoice.CREATE_BILL:
             creatNewBill();
             break;
-        }
-        case BillChoice.SHOW_LIST_BILL: {
+        case BillChoice.SHOW_LIST_BILL:
             showListBill();
             break;
-        }
-        case BillChoice.UPDATE_BILL: {
+        case BillChoice.UPDATE_BILL:
             updateBill();
             break;
-        }
-        case BillChoice.DELETE_BILL: {
+        case BillChoice.DELETE_BILL:
             deleteBill();
             break;
-        }
+        case BillChoice.FIND_BILL:
+            showBillFind();
+            break;
+        case BillChoice.SOFT_BILL:
+            softBills();
+            break;
         default:
             console.log('-----Nhập lại lựa chọn------');
     }

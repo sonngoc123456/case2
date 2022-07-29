@@ -4,33 +4,36 @@ export class Customer {
     private _electricmeterID : number;
 
 
-    constructor(name: string, numberhome: number, electricmeterID: number) {
+    constructor(name: string,
+                numberhome: number,
+                electricmeterID: number) {
         this._name = name;
         this._numberhome = numberhome;
         this._electricmeterID = electricmeterID;
     }
 
-    get name(): string {
+    getName(): string {
         return this._name;
     }
 
-    set name(value: string) {
+    setName(value: string) {
         this._name = value;
     }
 
-    get numberhome(): number {
+
+    getNumberHome(): number {
         return this._numberhome;
     }
 
-    set numberhome(value: number) {
+    setNumberHome(value: number) {
         this._numberhome = value;
     }
 
-    get electricmeterID(): number {
+    getElectricmeterID(): number {
         return this._electricmeterID;
     }
 
-    set electricmeterID(value: number) {
+    setElectricmeterID(value: number) {
         this._electricmeterID = value;
     }
 
