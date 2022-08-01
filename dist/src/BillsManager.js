@@ -72,7 +72,14 @@ class BillsManager {
     }
     AmountToPay(electricmeterID) {
         let value = this.findIndexBill(electricmeterID);
-        return this.money(value);
+        if (value === -1) {
+            return -1;
+        }
+        else {
+            let moneys = 1;
+            moneys = ((this.bills[value].getNewIndex()) - (this.bills[value].getOldIndex())) * 750;
+            return moneys;
+        }
     }
     softElectricMeterID() {
         for (let i = 0; i < this.bills.length; i++) {
@@ -88,17 +95,6 @@ class BillsManager {
         let temp = this.bills[j];
         this.bills[j] = this.bills[j + 1];
         this.bills[j + 1] = temp;
-    }
-    money(value) {
-        if (value === -1) {
-            return -1;
-        }
-        else {
-            let moneys = 1;
-            console.log(value);
-            moneys = ((this.bills[value].getNewIndex()) - (this.bills[value].getOldIndex())) * 750;
-            return moneys;
-        }
     }
 }
 exports.BillsManager = BillsManager;

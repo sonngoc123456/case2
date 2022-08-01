@@ -2,9 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Customer = void 0;
 class Customer {
-    constructor(name, numberhome, electricmeterID) {
+    constructor(name, numberhome, address, electricmeterID) {
         this._name = name;
         this._numberhome = numberhome;
+        this._address = address;
         this._electricmeterID = electricmeterID;
     }
     getName() {
@@ -24,6 +25,12 @@ class Customer {
     }
     setElectricmeterID(value) {
         this._electricmeterID = value;
+    }
+    getAddress() {
+        return this._address;
+    }
+    setAddress(value) {
+        this._address = value;
     }
 }
 exports.Customer = Customer;

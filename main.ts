@@ -1,226 +1,106 @@
-import {BillsManager} from "./src/BillsManager";
-import {Customer} from "./src/Customer";
-import {Bill} from "./src/Bills";
+import {CallMethod} from "./src/callMethod";
 import * as rl from 'readline-sync';
+import {Menu} from "./src/Menu";
+import {BillChoice} from "./src/Enum";
+import {UpdateChoice} from "./src/Enum";
 
+let menu = new Menu();
 
-let choice = -1;
-
-enum BillChoice {
-    CREATE_BILL = 1,
-    SHOW_LIST_BILL = 2,
-    UPDATE_BILL = 3,
-    DELETE_BILL = 4,
-    FIND_BILL = 5,
-    SOFT_BILL = 6,
-    EXIT = 0
+let callmethod = new CallMethod()
+function login() {
+    console.log("=====Đăng Nhập Hệ Thống=====")
+    let email = rl.question('Nhap Email : ')
+    let password = +rl.question('Nhap Password : ')
+    if (email == "admin@gmail.com" && password == 123456) {
+        menuManager();
+    } else {
+        console.log("---Nhap sai tài khoản hoặc passwod----")
+        login();
+    }
 }
 
-enum UpdateChoice {
-    UPDATE_ALL_INFO_BILL = 1,
-    UPDATE_NAME = 2,
-    UPDATE_HOMENUMBER = 3,
-    UPDATE_ELECTRICMETERID = 4,
-    UPDATE_OLDINDEX = 5,
-    UPDATE_NEWINDEX = 6,
-    EXIT = 0
-}
+login();
 
-let billsManager = new BillsManager();
+function menuManager() {
+    let choice = -1;
+    do {
+        menu.Manager();
+        choice = +rl.question('Nhập lựa chọn của bạn:');
+        switch (choice) {
+            case BillChoice.CREATE_BILL:
+                callmethod.creatNewBill();
+                break;
 
-function inputCustomer() {
-    let name = rl.question('Nhập tên khách hàng:');
-    let homenumber = +rl.question('Nhập số nhà :');
-    let electricmeterID = +rl.question('Nhập ID công tơ điện :');
-    return new Customer(name,homenumber,electricmeterID);
-}
+            case BillChoice.SHOW_LIST_BILL:
+                callmethod.showListBill();
+                break;
 
-function inputBill(): Bill {
-    let customer = inputCustomer();
-    let oldindex = +rl.question('Nhập chỉ số điện cũ:');
-    let newindex = +rl.question('Nhập chỉ số điện mới :');
-    return new Bill(oldindex,newindex,customer);
-}
+            case BillChoice.UPDATE_BILL:
+                menuUpdate()
+                break;
 
-function showListBill() {
-    console.log('-----Danh sách hóa đơn-------');
-    let bills = billsManager.getAllBills();
-    displayList(bills);
-}
+            case BillChoice.DELETE_BILL:
+                callmethod.deleteBill();
+                break;
 
-function creatNewBill() {
-    console.log('-----Thêm hóa đơn mới-----');
-    let bill = inputBill();
-    billsManager.creatNewBill(bill);
-}
+            case BillChoice.FIND_BILL:
+                callmethod.showBillFind();
+                break;
 
-function updateBill() {
-    console.log('---Cập nhật thông tin hóa đơn---');
-    let electricmeterID = +rl.question('Nhập ID công tơ điện:');
-    let bill = inputBill();
-    billsManager.updateBill(electricmeterID, bill);
-}
+            case BillChoice.SOFT_BILL:
+                callmethod.softBills();
+                break;
 
-function updateNewName() {
-    console.log('---Cập nhật tên khách hàng trên hóa đơn---');
-    let electricmeterID = +rl.question('Nhập ID công tơ điện:');
-    let newNameCustomer = rl.question('Nhập tên mới của khách hàng:');
-    billsManager.updateNameInfo(electricmeterID,newNameCustomer);
-    billsManager.getAllBills();
-}
+            case BillChoice.Amout:
+                callmethod.showAmout();
+                break;
 
-function updateNewHomeNumber() {
-    console.log('---Cập nhật tên khách hàng trên hóa đơn---');
-    let electricmeterID = +rl.question('Nhập ID công tơ điện:');
-    let newHomeNumberCustomer = +rl.question('Nhập số nhà mới của khách hàng:');
-    billsManager.updateNumberHomeInfo(electricmeterID,newHomeNumberCustomer);
-    billsManager.getAllBills();
-}
+            case BillChoice.EXIT:
+                break;
 
-function updateNewElectricMeterID() {
-    console.log('---Cập nhật tên khách hàng trên hóa đơn---');
-    let electricmeterID = +rl.question('Nhập ID công tơ điện:');
-    let newNewElectricMeterIDCustomer = +rl.question('Nhập số nhà mới của khách hàng:');
-    billsManager.updateElectricMeterIDInfo(electricmeterID,newNewElectricMeterIDCustomer);
-    billsManager.getAllBills();
-}
-
-function updateOldIndex() {
-    console.log('---Cập nhật tên khách hàng trên hóa đơn---');
-    let electricmeterID = +rl.question('Nhập ID công tơ điện:');
-    let OldIndexNew = +rl.question('Nhập số nhà mới của khách hàng:');
-    billsManager.updateOldIndexInfo(electricmeterID,OldIndexNew);
-    billsManager.getAllBills();
-}
-function updateNewIndex() {
-    console.log('---Cập nhật tên khách hàng trên hóa đơn---');
-    let electricmeterID = +rl.question('Nhập ID công tơ điện:');
-    let NewIndex = +rl.question('Nhập số nhà mới của khách hàng:');
-    billsManager.updateNewIndexInfo(electricmeterID,NewIndex);
-    billsManager.getAllBills();
-}
-
-
-
-function deleteBill() {
-    console.log('---Xóa thông tin hóa đơn---');
-    let electricmeterID = +rl.question('Nhập ID công tơ điện :');
-    billsManager.deleteBill(electricmeterID);
-}
-
-function showBillFind() {
-    console.log('---Tìm kiếm hóa đơn---');
-    let electricmeterID = +rl.question('Nhập ID công tơ điện :');
-    let bills = billsManager.showBillFind(electricmeterID)
-    displayList(bills);
-}
-
-function displayList(bills: Bill[]) {
-    let container = [];
-    let data;
-    for (let i = 0; i < bills.length; i++) {
-        data = {
-            CustomerName: bills[i].getCustomer().getName(),
-            HomeNumber: bills[i].getCustomer().getNumberHome(),
-            ElectricMeterID: bills[i].getCustomer().getElectricmeterID(),
-            OldIndex: bills[i].getOldIndex(),
-            NewIndex: bills[i].getNewIndex(),
+            default :
+                console.log('-----Nhập lại lựa chọn------')
         }
-        container.push(data)
-    }
-    console.table(container);
+    } while (choice != BillChoice.EXIT);
+}
+menuManager();
+
+function menuUpdate() {
+    let updatechoice = -1;
+    do {
+        menu.Update();
+        updatechoice = +rl.question('Nhập lựa chọn của bạn:');
+        switch (updatechoice) {
+            case UpdateChoice.UPDATE_ALL_INFO_BILL:
+                callmethod.updateBill();
+                break;
+
+            case UpdateChoice.UPDATE_NAME:
+                callmethod.updateNewName();
+                break;
+
+            case UpdateChoice.UPDATE_HOMENUMBER:
+                callmethod.updateNewHomeNumber();
+                break;
+
+            case UpdateChoice.UPDATE_ELECTRICMETERID:
+                callmethod.updateNewElectricMeterID();
+                break;
+
+            case UpdateChoice.UPDATE_OLDINDEX:
+                callmethod.updateOldIndex();
+                break;
+
+            case UpdateChoice.UPDATE_NEWINDEX:
+                callmethod.updateNewIndex();
+                break;
+
+            case UpdateChoice.EXIT :
+                break;
+
+            default :
+                console.log('-----Nhập lại lựa chọn------')
+        }
+    } while (updatechoice != UpdateChoice.EXIT);
 }
 
-function softBills() {
-    console.log('-----Sắp xếp hóa đơn-----');
-    let bills = billsManager.softElectricMeterID()
-    displayList(bills);
-}
-
-
-
-function menu() {
-    console.log('---Quản lý hóa đơn tiền điện---');
-    console.log('1. Tạo hóa đơn mới');
-    console.log('2. Hiển thị tất cả hóa đơn');
-    console.log('3. Chỉnh sửa hóa đơn');
-    console.log('4. Xóa hóa đơn');
-    console.log('5. Tìm kiếm hóa đơn');
-    console.log('6. Sắp xếp hóa đơn');
-    console.log('0. Thoát chương trình');
-}
-function Update() {
-    console.log('---Chỉnh sửa thông tin trên hóa đơn---');
-    console.log('1. Chỉnh sửa toàn bộ thông tin');
-    console.log('2. Chỉnh sửa tên khách hàng');
-    console.log('3. Chỉnh sửa số nhà khách hàng');
-    console.log('4. Chỉnh sửa ID công tơ điện');
-    console.log('5. Chỉnh sửa chỉ số điện cũ');
-    console.log('6. Chỉnh sửa chỉ số điện mới');
-    console.log('0. Thoát chương trình');
-}
-
-do {
-    menu();
-    choice = +rl.question('Nhập lựa chọn của bạn:');
-    switch (choice) {
-        case BillChoice.CREATE_BILL:
-            creatNewBill();
-            break;
-
-        case BillChoice.SHOW_LIST_BILL:
-            showListBill();
-            break;
-
-        case BillChoice.UPDATE_BILL:
-            let updatechoice = -1;
-            do {
-                Update();
-                updatechoice = +rl.question('Nhập lựa chọn của bạn:');
-                switch (updatechoice) {
-                    case UpdateChoice.UPDATE_ALL_INFO_BILL:
-                        updateBill();
-                        break;
-
-                    case UpdateChoice.UPDATE_NAME:
-                        updateNewName();
-                        break;
-
-                    case UpdateChoice.UPDATE_HOMENUMBER:
-                        updateNewHomeNumber();
-                        break;
-
-                    case UpdateChoice.UPDATE_ELECTRICMETERID:
-                        updateNewElectricMeterID();
-                        break;
-
-                    case UpdateChoice.UPDATE_OLDINDEX:
-                        updateOldIndex();
-                        break;
-
-                    case UpdateChoice.UPDATE_NEWINDEX:
-                        updateNewIndex();
-                        break;
-
-                    default :
-                        console.log('-----Nhập lại lựa chọn------')
-                }
-            } while (updatechoice != UpdateChoice.EXIT);
-            break;
-
-        case BillChoice.DELETE_BILL:
-            deleteBill();
-            break;
-
-        case BillChoice.FIND_BILL:
-            showBillFind();
-            break;
-
-        case BillChoice.SOFT_BILL:
-            softBills();
-            break;
-
-        default :
-            console.log('-----Nhập lại lựa chọn------')
-    }
-} while (choice != BillChoice.EXIT);
